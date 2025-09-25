@@ -1,8 +1,16 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
-import { defineConfig } from '#q-app/wrappers'
-import { fileURLToPath } from 'node:url'
+import {defineConfig} from '#q-app/wrappers'
+import path from 'path';
+
+import {fileURLToPath} from 'url';
+import pkg from './package.json' with {type: 'json'};
+
+// Recreate __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const curr_version = pkg.version;
 
 export default defineConfig((ctx) => {
   return {
@@ -39,11 +47,11 @@ export default defineConfig((ctx) => {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
     build: {
       target: {
-        browser: [ 'es2022', 'firefox115', 'chrome115', 'safari14' ],
+        browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -59,9 +67,19 @@ export default defineConfig((ctx) => {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+
+      extendViteConf(viteConf, {isServer, isClient}) {
+        Object.assign(viteConf.resolve.alias, {
+          library: path.join(__dirname, './src/library'),
+          composables: path.join(__dirname, './src/composables')
+        });
+        Object.assign(viteConf.resolve, {extensions: ['.vue', '.js']});
+        Object.assign(viteConf.define, {
+          W_VERSION: JSON.stringify(curr_version),
+        });
+      },
       // viteVuePluginOptions: {},
-      
+
       vitePlugins: [
         ['@intlify/unplugin-vue-i18n/vite', {
           // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
@@ -74,7 +92,7 @@ export default defineConfig((ctx) => {
           ssr: ctx.modeName === 'ssr',
 
           // you need to set i18n resource including paths !
-          include: [ fileURLToPath(new URL('./src/i18n', import.meta.url)) ]
+          include: [fileURLToPath(new URL('./src/i18n', import.meta.url))]
         }],
 
         ['vite-plugin-checker', {
@@ -82,7 +100,7 @@ export default defineConfig((ctx) => {
             lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
             useFlatConfig: true
           }
-        }, { server: false }]
+        }, {server: false}]
       ]
     },
 
@@ -94,7 +112,18 @@ export default defineConfig((ctx) => {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
-      config: {},
+      config: {
+        notify: {
+          color: 'negative',
+          icon: 'report_problem',
+          position: 'top-right',
+          timeout: 20000,
+          group: false,
+        },
+        screen: {
+          bodyClasses: true,
+        },
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -182,7 +211,7 @@ export default defineConfig((ctx) => {
       // extendPackageJson (json) {},
 
       // Electron preload scripts (if any) from /src-electron, WITHOUT file extension
-      preloadScripts: [ 'electron-preload' ],
+      preloadScripts: ['electron-preload'],
 
       // specify the debugging port to use for the Electron app when running in development mode
       inspectPort: 5858,

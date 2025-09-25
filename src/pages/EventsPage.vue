@@ -1,40 +1,42 @@
 <template>
-  <div class="q-pa-md" style="max-width: 350px">
-    <q-list bordered separator>
+  <AppPage>
+    <q-list bordered separator style="max-width: 350px">
       <q-item v-for="event in events" :key="event.id" :to="{ name: 'event', params: { id: event.id } }">
         <q-item-section>
-          <q-item-label overline>OVERLINE</q-item-label>
+          <q-item-label overline>{{ getMembers(event.members) }}</q-item-label>
           <q-item-label>{{ event.name }}</q-item-label>
-          <q-item-label caption >{{ event.description }}</q-item-label>
+          <q-item-label caption>{{ event.description }}</q-item-label>
         </q-item-section>
 
-        <q-item-section side top>
-          <q-item-label caption>5 min ago</q-item-label>
+        <q-item-section side top v-if="!event.opened">
+          <q-item-label caption>Uzavřeno</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
-
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <AppToolbar>
       <q-btn fab icon="add" color="positive" @click="addEvent"/>
-    </q-page-sticky>
-
-  </div>
+    </AppToolbar>
+  </AppPage>
 </template>
 
 <script setup>
-  import {liveQuery} from "dexie";
   import {db} from "src/db";
-  import {useObservable} from "@vueuse/rxjs";
   import {useRouter} from 'vue-router'
+  import AppPage from "components/AppPage.vue";
+  import {usePersons} from 'src/composables/usePersons'
+  import AppToolbar from "components/AppToolbar.vue";
 
   const router = useRouter()
-
-  const events = useObservable(liveQuery(async () => db.events.toArray()))
+  const events = db.query(db.events)
+  const {getMembers} = usePersons()
 
   async function addEvent() {
     const newId = await db.events.add({
-      name: ' new event',
-      description: ''
+      name: 'new event',
+      description: '',
+      members: [],
+      opened: true,
+      currencies: []
     })
     router.push({name: 'event', params: {id: newId}})
   }

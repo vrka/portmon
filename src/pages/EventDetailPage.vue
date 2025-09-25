@@ -1,64 +1,75 @@
 <template>
-  <div v-if="event">
-    <h2>Edit Event: {{ event.name }}</h2>
-
-    <q-input
-      v-model="event.name"
-      label="Name"
-      outlined
-      class="q-mb-md"
-    />
-    <q-input
-      v-model="event.description"
-      label="Description"
-      type="textarea"
-      outlined
-      class="q-mb-md"
-    />
-
-    <q-btn
-      color="primary"
-      label="Save"
-      @click="saveEvent"
-      :loading="saving"
-    />
-  </div>
-
-  <div v-else>
-    <q-spinner color="primary" size="2em"/>
-    <span class="q-ml-md">Loading event...</span>
-  </div>
+  <AppPage :ready="!!event">
+    <h5 v-text="event.name"/>
+    <div v-text="event.description"/>
+    <div class="text-h6" v-text="getMembers(event.members)"/>
+    <TotalsTable :id="eventId"/>
+    <EntryTable :id="eventId"/>
+    <AppToolbar>
+      <q-btn fab icon="edit" color="primary" outline @click="edit"/>
+      <q-btn fab icon="add" color="positive" @click="add"/>
+    </AppToolbar>
+  </AppPage>
 </template>
 
 <script setup>
-  import {ref, onMounted} from 'vue'
-  import {useRoute} from 'vue-router'
-  import {db} from 'src/db'
-  import {toRaw} from 'vue'
-  import {useRouter} from 'vue-router'
+  import {onMounted, ref} from "vue";
+  import {db} from "src/db";
+  import {useRoute, useRouter} from "vue-router";
+  import AppPage from "components/AppPage.vue";
+  import {usePersons} from "composables/usePersons.js";
+  import AppToolbar from "components/AppToolbar.vue";
+  import EntryTable from "components/EntryTable.vue";
+  import TotalsTable from "components/TotalsTable.vue";
+
+  const {getMembers} = usePersons()
 
   const route = useRoute()
   const router = useRouter()
-  const eventId = Number(route.params.id) // convert string -> number
-
+  const eventId = Number(route.params.id)
   const event = ref(null)
-  const saving = ref(false)
 
-  // Load event from IndexedDB
   onMounted(async () => {
     event.value = await db.events.get(eventId)
   })
 
-  // Save changes
-  async function saveEvent() {
-    if (!event.value) return
-    saving.value = true
-    try {
-      await db.events.put(toRaw(event.value))
-      router.push({name: 'events'})
-    }
-    finally {
-      saving.value = false
-    }
+  function edit() {
+    router.push({name: 'event-edit', params: {id: eventId}})
   }
+
+  async function add() {
+    const newId = await db.entries.add({
+      event_id: eventId,
+      date: new Date,
+      description: '',
+      amount: 0,
+      currency: await getDefaultCurrency(eventId),
+      payers: null,
+      receivers: null
+    })
+    router.push({name: 'entry', params: {id: newId}})
+  }
+
+  async function getDefaultCurrency(eventId) {
+    return await mostUsedCurrency(db.entries.where({event_id: eventId}))
+      || await mostUsedCurrency(db.entries)
+      || "";
+  }
+
+  async function mostUsedCurrency(query) {
+    let maxCurrency = null;
+    let maxCount = 0;
+    const counts = {};
+
+    await query.filter(entry => entry.currency)
+      .each(entry => {
+        counts[entry.currency] = (counts[entry.currency] || 0) + 1;
+        if (counts[entry.currency] > maxCount) {
+          maxCount = counts[entry.currency];
+          maxCurrency = entry.currency;
+        }
+      });
+    return maxCurrency;
+  }
+
 </script>
