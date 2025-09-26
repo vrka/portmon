@@ -19,6 +19,7 @@
         />
       </q-td>
     </template>
+    <slot/>
   </FilterTable>
 </template>
 

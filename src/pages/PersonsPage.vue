@@ -1,9 +1,8 @@
 <template>
   <AppLayout title="Osoby">
-    <PersonTable/>
-    <AppToolbar>
-      <q-btn fab icon="add" color="positive" @click="addPerson"/>
-    </AppToolbar>
+    <PersonTable>
+      <q-btn  color="positive" @click="addPerson">Přidej</q-btn>
+    </PersonTable>
   </AppLayout>
 </template>
 
@@ -13,7 +12,6 @@
   import {db} from "src/db";
   import AppLayout from 'layouts/AppLayout.vue';
   import PersonTable from "components/PersonTable.vue";
-  import AppToolbar from "components/AppToolbar.vue";
 
   const router = useRouter();
 

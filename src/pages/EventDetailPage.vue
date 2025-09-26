@@ -1,12 +1,13 @@
 <template>
   <AppLayout :ready="!!event" :title="event?.name">
-    <div v-text="event.description"/>
+    <div class="row reverse-wrap">
+      <div class="col-12 col-sm-10" v-text="event.description"/>
+      <q-btn class="col-12 col-sm-2" color="primary" @click="edit" outline label="Uprav"/>
+    </div>
     <TotalsTable :id="eventId" class="q-my-md"/>
-    <EntryTable :id="eventId"/>
-    <AppToolbar>
-      <q-btn fab icon="edit" color="primary" outline @click="edit"/>
-      <q-btn fab icon="add" color="positive" @click="add"/>
-    </AppToolbar>
+    <EntryTable :id="eventId">
+      <q-btn class="full-width" color="positive" @click="add" label="Přidej"/>
+    </EntryTable>
   </AppLayout>
 </template>
 
@@ -15,10 +16,8 @@
   import {db} from "src/db";
   import {useRoute, useRouter} from "vue-router";
   import AppLayout from 'layouts/AppLayout.vue';
-  import AppToolbar from "components/AppToolbar.vue";
   import EntryTable from "components/EntryTable.vue";
   import TotalsTable from "components/TotalsTable.vue";
-
 
   const route = useRoute()
   const router = useRouter()

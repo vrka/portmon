@@ -2,7 +2,9 @@
   <FilterTable :data="entries"
                :columns="columns"
                @rowClick="onRowClick"
-  />
+  >
+    <slot/>
+  </FilterTable>
 </template>
 
 <script setup>
