@@ -1,10 +1,8 @@
 <template>
-  <AppPage :ready="!!entry">
-    <h3>Edit Entry</h3>
+  <AppLayout :ready="!!entry" title="Editace položky">
     <q-form @submit.prevent="saveEntry" class="q-gutter-md">
-
       <!-- Date -->
-      <q-input v-model="dateString" outlined dense label="Date" class="q-mb-md">
+      <q-input v-model="dateString" outlined dense label="Datum" class="q-mb-md">
         <template #append>
           <q-icon name="event" class="cursor-pointer" @click="showDatePicker = true"/>
         </template>
@@ -16,7 +14,7 @@
       <!-- Description -->
       <q-input
         v-model="entry.description"
-        label="Description"
+        label="Popis"
         type="textarea"
         outlined
         dense
@@ -26,7 +24,7 @@
       <!-- Amount -->
       <q-input
         v-model.number="entry.amount"
-        label="Amount"
+        label="Částka"
         type="number"
         outlined
         dense
@@ -37,7 +35,7 @@
       <q-select
         v-model="entry.currency"
         :options="currencyOptions"
-        label="Currency"
+        label="Měna"
         outlined
         dense
         use-input
@@ -50,26 +48,26 @@
 
       <PersonPicker
         v-model="entry.payers"
-        :all-persons="persons"
+        :all-persons="event?.members"
         label="Plátce"
       />
 
       <PersonPicker
         v-model="entry.receivers"
-        :all-persons="persons"
+        :all-persons="event?.members"
         label="Příjemce"
       />
 
-      <q-btn label="Save" color="primary" type="submit"/>
+      <q-btn label="Uložit" color="primary" type="submit"/>
     </q-form>
-  </AppPage>
+  </AppLayout>
 </template>
 
 <script setup>
   import {computed, ref, toRaw} from 'vue';
   import {useRoute, useRouter} from 'vue-router';
   import {db} from 'src/db';
-  import AppPage from 'components/AppPage.vue';
+  import AppLayout from 'layouts/AppLayout.vue';
   import PersonPicker from 'components/PersonPicker.vue';
   import {whenReady} from "library/helpers.js";
 
@@ -81,8 +79,6 @@
   const entry = db.record(db.entries, entryId);
   const eventIdPromise = db.field(entry, 'event_id')
   const event = db.record(db.events, eventIdPromise);
-
-  const persons = db.query(db.persons);
 
   const showDatePicker = ref(false);
   const dateString = computed({

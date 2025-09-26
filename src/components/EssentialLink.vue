@@ -1,9 +1,9 @@
 <template>
-  <q-item
-    v-bind="itemProps"
+  <q-item exact
+          v-bind="itemProps"
   >
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="icon" />
+      <q-icon :name="icon"/>
     </q-item-section>
 
     <q-item-section>
@@ -16,12 +16,12 @@
 <script setup>
 
   const props = defineProps({
-    title: { type: String, required: true },
-    caption: { type: String, default: '' },
-    link: { type: String, default: '' },
-    route: { type: [String, Object], default: null },
-    icon: { type: String, default: '' },
-    replace: { type: Boolean, default: false }
+    title: {type: String, required: true},
+    caption: {type: String, default: ''},
+    link: {type: String, default: ''},
+    route: {type: [String, Object], default: null},
+    icon: {type: String, default: ''},
+    replace: {type: Boolean, default: false}
   })
 
   const isRoute = !!props.route
@@ -29,9 +29,9 @@
 
   // Only pass props relevant for the type
   const itemProps = isRoute
-    ? { to: props.route, replace: props.replace }       // router link
+    ? {to: props.route, replace: props.replace}       // router link
     : isLink
-      ? { href: props.link, target: '_blank', tag: 'a' } // external link
+      ? {href: props.link, target: '_blank', tag: 'a'} // external link
       : {}  // fallback
 
 </script>

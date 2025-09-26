@@ -1,4 +1,5 @@
 <template>
+  <h6>Měny</h6>
   <q-list bordered separator>
     <q-item v-for="c in currencies" :key="c.code" class="items-start" clickable @click="tryEnableConversion(c)">
       <q-item-section>
@@ -41,6 +42,7 @@
           <q-select
             v-model="c.base"
             :options="baseOptions(c)"
+            emit-value
             option-label="label"
             option-value="value"
             outlined

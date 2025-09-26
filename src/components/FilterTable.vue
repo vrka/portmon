@@ -5,7 +5,7 @@
       dense
       debounce="300"
       v-model="search"
-      label="Quick Search"
+      label="vyhledat"
       class="q-mb-md"
     />
 
@@ -19,7 +19,9 @@
       @row-click="onRowClick"
       hide-pagination
     >
-      <slot v-for="name in Object.keys($slots)" :name="name" v-bind="{ row: row }"/>
+      <template v-for="(_ ,slot ) in $slots" v-slot:[slot]="scope">
+        <slot :name="slot" v-bind="scope"/>
+      </template>
     </q-table>
   </div>
 </template>

@@ -6,18 +6,17 @@
       label="Všichni"
       class="q-mb-sm"
     />
-
     <q-list bordered separator>
       <q-item
         v-for="person in allPersons"
-        :key="person.id"
+        :key="person"
         clickable
-        :active="isSelected(person.id)"
+        :active="isSelected(person)"
         active-class="bg-primary text-white"
-        @click="togglePerson(person.id)"
+        @click="togglePerson(person)"
       >
         <q-item-section>
-          <q-item-label>{{ person.forename }} {{ person.surname }}</q-item-label>
+          <q-item-label>{{ getPerson(person).forename }} {{ getPerson(person).surname }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -25,7 +24,8 @@
 </template>
 
 <script setup>
-  import {computed} from 'vue'
+  import {computed} from 'vue';
+  import {usePersons} from "composables/usePersons.js";
 
   const props = defineProps({
     modelValue: {type: Array, default: () => []},
@@ -33,7 +33,8 @@
     label: {type: String, default: ''},
   })
 
-  const emit = defineEmits(['update:modelValue'])
+  const emit = defineEmits(['update:modelValue']);
+  const {getPerson} = usePersons();
 
   const allSelected = computed({
     get() {

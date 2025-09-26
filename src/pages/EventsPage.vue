@@ -1,5 +1,5 @@
 <template>
-  <AppPage>
+  <AppLayout title="Akce">
     <q-list bordered separator style="max-width: 350px">
       <q-item v-for="event in events" :key="event.id" :to="{ name: 'event', params: { id: event.id } }">
         <q-item-section>
@@ -16,13 +16,13 @@
     <AppToolbar>
       <q-btn fab icon="add" color="positive" @click="addEvent"/>
     </AppToolbar>
-  </AppPage>
+  </AppLayout>
 </template>
 
 <script setup>
   import {db} from "src/db";
   import {useRouter} from 'vue-router'
-  import AppPage from "components/AppPage.vue";
+  import AppLayout from 'layouts/AppLayout.vue';
   import {usePersons} from 'src/composables/usePersons'
   import AppToolbar from "components/AppToolbar.vue";
 

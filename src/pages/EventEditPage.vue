@@ -1,6 +1,5 @@
 <template>
-  <AppPage :ready="!!event">
-    <h3>Edit Event: {{ event.name }}</h3>
+  <AppLayout :ready="!!event" title="Editace akce">
     <q-checkbox v-model="event.opened"
                 label="Uzavřeno"
                 :true-value="false"
@@ -20,6 +19,7 @@
     />
     <PersonTable showButtons
                  :members="event.members"
+                 :used="usedMembers"
                  @add-member="addMember"
                  @remove-member="removeMember"
     />
@@ -30,18 +30,18 @@
     <q-btn
       class="q-mt-md"
       color="primary"
-      label="Save"
+      label="Ulož"
       @click="saveEvent"
       :loading="saving"
     />
-  </AppPage>
+  </AppLayout>
 </template>
 
 <script setup>
   import {computed, ref, toRaw} from 'vue'
   import {useRoute, useRouter} from 'vue-router'
   import {db} from 'src/db'
-  import AppPage from "components/AppPage.vue";
+  import AppLayout from 'layouts/AppLayout.vue';
   import PersonTable from "components/PersonTable.vue";
   import CurrenciesTable from "components/CurrenciesTable.vue";
 
@@ -54,6 +54,10 @@
   const saving = ref(false)
 
   const usedCurrencies = computed(() => Array.from(new Set(entries.value.map(e => e.currency))));
+  const usedMembers = computed(() => Array.from(new Set(entries.value.flatMap(e => [
+    ...(e.payers || []),
+    ...(e.receivers || []),
+  ]))));
 
   async function saveEvent() {
     saving.value = true

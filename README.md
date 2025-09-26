@@ -1,4 +1,4 @@
-# Partmon (partmon)
+# Portmon (portmon)
 
 Bills sharing
 
@@ -25,7 +25,7 @@ npm run lint
 
 ### Build the app for production
 ```bash
-quasar build
+quasar build --mode pwa
 ```
 
 ### Customize the configuration

@@ -1,28 +1,24 @@
 <template>
-  <AppPage :ready="!!event">
-    <h5 v-text="event.name"/>
+  <AppLayout :ready="!!event" :title="event?.name">
     <div v-text="event.description"/>
-    <div class="text-h6" v-text="getMembers(event.members)"/>
-    <TotalsTable :id="eventId"/>
+    <TotalsTable :id="eventId" class="q-my-md"/>
     <EntryTable :id="eventId"/>
     <AppToolbar>
       <q-btn fab icon="edit" color="primary" outline @click="edit"/>
       <q-btn fab icon="add" color="positive" @click="add"/>
     </AppToolbar>
-  </AppPage>
+  </AppLayout>
 </template>
 
 <script setup>
   import {onMounted, ref} from "vue";
   import {db} from "src/db";
   import {useRoute, useRouter} from "vue-router";
-  import AppPage from "components/AppPage.vue";
-  import {usePersons} from "composables/usePersons.js";
+  import AppLayout from 'layouts/AppLayout.vue';
   import AppToolbar from "components/AppToolbar.vue";
   import EntryTable from "components/EntryTable.vue";
   import TotalsTable from "components/TotalsTable.vue";
 
-  const {getMembers} = usePersons()
 
   const route = useRoute()
   const router = useRouter()

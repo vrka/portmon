@@ -1,54 +1,42 @@
 <template>
-  <AppPage :ready="!!person">
-
-  <q-form @submit.prevent="savePerson" class="q-gutter-md">
-
-        <q-input
-          v-model="person.forename"
-          label="Forename"
-          outlined
-          dense
-        />
-
-        <q-input
-          v-model="person.surname"
-          label="Surname"
-          outlined
-          dense
-        />
-
-        <q-input
-          v-model="person.email"
-          label="Email"
-          outlined
-          dense
-          type="email"
-        />
-
-        <q-input
-          v-model="person.phone"
-          label="Phone"
-          outlined
-          dense
-        />
-
-        <q-input
-          v-model="person.account"
-          label="Account"
-          outlined
-          dense
-        />
-
-        <q-btn label="Save" color="primary" type="submit"/>
-      </q-form>
-  </AppPage>
+  <AppLayout :ready="!!person">
+    <q-form @submit.prevent="savePerson" class="q-gutter-md">
+      <q-input v-model="person.forename"
+               label="Forename"
+               outlined
+               dense
+      />
+      <q-input v-model="person.surname"
+               label="Surname"
+               outlined
+               dense
+      />
+      <q-input v-model="person.email"
+               label="Email"
+               outlined
+               dense
+               type="email"
+      />
+      <q-input v-model="person.phone"
+               label="Phone"
+               outlined
+               dense
+      />
+      <q-input v-model="person.account"
+               label="Account"
+               outlined
+               dense
+      />
+      <q-btn label="Save" color="primary" type="submit"/>
+    </q-form>
+  </AppLayout>
 </template>
 
 <script setup>
   import {onMounted, ref, toRaw} from 'vue';
   import {useRoute, useRouter} from 'vue-router';
   import {db} from 'src/db';
-  import AppPage from "components/AppPage.vue";
+  import AppLayout from 'layouts/AppLayout.vue';
 
   const route = useRoute();
   const router = useRouter();

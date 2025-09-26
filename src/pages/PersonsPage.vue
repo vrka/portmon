@@ -1,17 +1,17 @@
 <template>
-  <AppPage>
+  <AppLayout title="Osoby">
     <PersonTable/>
     <AppToolbar>
       <q-btn fab icon="add" color="positive" @click="addPerson"/>
     </AppToolbar>
-  </AppPage>
+  </AppLayout>
 </template>
 
 
 <script setup>
   import {useRouter} from 'vue-router';
   import {db} from "src/db";
-  import AppPage from "components/AppPage.vue";
+  import AppLayout from 'layouts/AppLayout.vue';
   import PersonTable from "components/PersonTable.vue";
   import AppToolbar from "components/AppToolbar.vue";
 

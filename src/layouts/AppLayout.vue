@@ -10,12 +10,8 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Partmon {{ version }}</div>
+        <q-toolbar-title>{{ title }}</q-toolbar-title>
+        <div>Portmon {{ version }}</div>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -32,7 +28,14 @@
       </q-list>
     </q-drawer>
     <q-page-container>
-      <router-view/>
+      <q-page padding>
+        <div v-if="ready">
+          <slot/>
+        </div>
+        <div v-else>
+          <q-spinner size="50px" label="Loading..."/>
+        </div>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
@@ -41,18 +44,28 @@
   import {ref} from 'vue'
   import EssentialLink from 'components/EssentialLink.vue'
 
+  defineProps({
+    ready: {
+      type: Boolean,
+      default: true
+    },
+    title: {
+      type: String,
+    }
+  });
+
   const version = W_VERSION;
 
   const linksList = [
     {
-      title: 'Events',
-      caption: 'list of all events',
+      title: 'Akce',
+      caption: 'seznam všech akcí',
       icon: 'list',
       route: {name: 'events'}
     },
     {
-      title: 'Persons',
-      caption: 'list of all persons',
+      title: 'Osoby',
+      caption: 'seznam všech osob',
       icon: 'person',
       route: {name: 'persons'}
     },
