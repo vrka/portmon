@@ -1,75 +1,69 @@
 <template>
   <AppLayout :ready="!!entry" title="Editace položky">
-    <q-form @submit.prevent="saveEntry" class="q-gutter-md">
-      <!-- Date -->
-      <q-input v-model="dateString" outlined dense label="Datum" class="q-mb-md">
-        <template #append>
-          <q-icon name="event" class="cursor-pointer" @click="showDatePicker = true"/>
-        </template>
-        <q-popup-proxy v-model="showDatePicker" transition-show="scale" transition-hide="scale">
-          <q-date v-model="dateString" mask="YYYY-MM-DD" today-btn/>
-        </q-popup-proxy>
-      </q-input>
-
-      <!-- Description -->
-      <q-input
-        v-model="entry.description"
-        label="Popis"
-        type="textarea"
-        outlined
-        dense
-        class="q-mb-md"
-      />
-
-      <!-- Amount -->
-      <q-input
-        v-model.number="entry.amount"
-        label="Částka"
-        type="number"
-        outlined
-        dense
-        class="q-mb-md"
-      />
-
-      <!-- Currency -->
-      <q-select
-        v-model="entry.currency"
-        :options="currencyOptions"
-        label="Měna"
-        outlined
-        dense
-        use-input
-        emit-value
-        input-debounce="300"
-        new-value-mode="add"
-        @new-value="normalizeCurrency"
-        class="q-mb-md"
-      />
-
-      <PersonPicker
-        v-model="entry.payers"
-        :all-persons="event?.members"
-        label="Plátce"
-      />
-
-      <PersonPicker
-        v-model="entry.receivers"
-        :all-persons="event?.members"
-        label="Příjemce"
-      />
-
-      <q-btn label="Uložit" color="primary" type="submit"/>
+    <q-form @submit.prevent="saveEntry">
+      <div class="row q-col-gutter-md">
+        <div class="col-12 col-lg-6">
+          <div class="row q-col-gutter-md">
+            <q-input class="col-12 col-sm-8 col-md-4"
+                     v-model.number="entry.amount"
+                     label="Částka"
+                     type="number"
+                     outlined
+                     dense
+            />
+            <q-select class="col-12 col-sm-4"
+                      v-model="entry.currency"
+                      :options="currencyOptions"
+                      label="Měna"
+                      outlined
+                      dense
+                      use-input
+                      emit-value
+                      input-debounce="300"
+                      new-value-mode="add"
+                      @new-value="normalizeCurrency"
+            />
+            <DatePicker class="col-12 col-md-4"
+                        v-model="entry.date"/>
+            <q-input class="col-12"
+                     v-model="entry.description"
+                     label="Popis"
+                     type="textarea"
+                     outlined
+                     dense
+            />
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="row q-col-gutter-md">
+            <PersonPicker class="col-12 col-sm-6"
+                          v-model="entry.payers"
+                          :all-persons="event?.members"
+                          label="Plátce"
+            />
+            <PersonPicker class="col-12 col-sm-6"
+                          v-model="entry.receivers"
+                          :all-persons="event?.members"
+                          label="Příjemce"
+            />
+          </div>
+        </div>
+        <div class="col-12">
+          <q-btn label="Uložit" color="primary" type="submit"/>
+        </div>
+      </div>
     </q-form>
   </AppLayout>
 </template>
 
 <script setup>
-  import {computed, ref, toRaw} from 'vue';
+  import {ref, toRaw} from 'vue';
   import {useRoute, useRouter} from 'vue-router';
   import {db} from 'src/db';
   import AppLayout from 'layouts/AppLayout.vue';
   import PersonPicker from 'components/PersonPicker.vue';
   import {whenReady} from "library/helpers.js";
+  import DatePicker from "components/DatePicker.vue";
 
   const route = useRoute();
   const router = useRouter();
@@ -80,15 +74,6 @@
   const eventIdPromise = db.field(entry, 'event_id')
   const event = db.record(db.events, eventIdPromise);
 
-  const showDatePicker = ref(false);
-  const dateString = computed({
-    get: () => entry.value?.date?.toISOString().split('T')[0] || '',
-    set: val => {
-      entry.value.date = new Date(val);
-    }
-  });
-
-  // Generate currency options: existing + allow free entry
   const currencyOptions = ref([]);
 
   whenReady(event, ev => currencyOptions.value = ev.currencies?.map(({code}) => ({

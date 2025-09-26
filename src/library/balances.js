@@ -2,7 +2,6 @@ export function computeBalances(entries, members, currencies) {
 
   const nullRow = Object.fromEntries(members.map(n => [n, 0]));
   const balances = {};
-  console.log("START");
 
   entries.forEach(entry => {
     const payers = entry.payers === null ? members : entry.payers;
@@ -14,7 +13,6 @@ export function computeBalances(entries, members, currencies) {
     updateBalances(balances, curr, payers, -amount);
     updateBalances(balances, curr, receivers, amount);
   })
-  console.log("STOP", balances);
   return balances
 }
 

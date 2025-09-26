@@ -1,22 +1,34 @@
 <template>
   <div>
-    <h6>{{ label }}</h6>
-    <q-checkbox
-      v-model="allSelected"
-      label="Všichni"
-      class="q-mb-sm"
-    />
+    <div class="row justify-between items-baseline">
+      <span class="text-subtitle1" v-text="label"/>
+      <q-toggle v-model="allSelected"
+                label="Všichni"
+                left-label/>
+    </div>
     <q-list bordered separator>
       <q-item
         v-for="person in allPersons"
         :key="person"
         clickable
+        dense
         :active="isSelected(person)"
-        active-class="bg-primary text-white"
+        xactive-class="bg-primary text-white"
+        active-class="text-black"
+        :class="{'text-grey-7': !isSelected(person)}"
+
         @click="togglePerson(person)"
       >
         <q-item-section>
-          <q-item-label>{{ getPerson(person).forename }} {{ getPerson(person).surname }}</q-item-label>
+          <q-checkbox v-model="selected"
+                    :val="person"
+                    :label="getPerson(person).forename + ' ' + getPerson(person).surname"
+          />
+        </q-item-section>
+        <q-item-section side>
+          <q-btn dense flat outline square :icon="isExcluded(person) ? 'star': 'star_outline'"
+                 :color="isExcluded(person) ? 'yellow-9' : isSelected(person) ? 'black': 'text-grey-7'"
+                 @click.stop="longPressPerson(person)"/>
         </q-item-section>
       </q-item>
     </q-list>
@@ -36,6 +48,15 @@
   const emit = defineEmits(['update:modelValue']);
   const {getPerson} = usePersons();
 
+  const selected = computed({
+    get() {
+      return props.modelValue === null ? props.allPersons : props.modelValue
+    },
+    set(val) {
+      emit('update:modelValue', val)
+    }
+  })
+
   const allSelected = computed({
     get() {
       return props.modelValue === null
@@ -51,7 +72,7 @@
 
   function togglePerson(id) {
     if (allSelected.value) {
-      const newValue = props.allPersons.map(i => i.id).filter(i => i !== id)
+      const newValue = props.allPersons.filter(i => i !== id)
       emit('update:modelValue', newValue)
     } else {
       const current = [...props.modelValue]
@@ -65,7 +86,15 @@
     }
   }
 
+  function longPressPerson(id) {
+    emit('update:modelValue', [id])
+  }
+
   function isSelected(id) {
     return props.modelValue == null || props.modelValue.includes(id)
+  }
+
+  function isExcluded(id) {
+    return props.modelValue && props.modelValue.length === 1 && props.modelValue[0] === id;
   }
 </script>
