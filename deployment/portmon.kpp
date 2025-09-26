@@ -1,0 +1,10 @@
+[www]
+remote = sftp://sftp_portmon:%KPP(sftp_portmon_h2)@hetzel2.elspeedo.cz:23609/www
+local = ../dist/pwa
+ignore = "
+  .git*
+  .hg
+  .hg*
+"
+allowdelete = true
+preprocess = false
