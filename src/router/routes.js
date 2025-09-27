@@ -1,13 +1,21 @@
+import EventsPage from 'pages/EventsPage.vue';
+import EventDetailPage from 'pages/EventDetailPage.vue';
+import EventEditPage from 'pages/EventEditPage.vue';
+import PersonsPage from 'pages/PersonsPage.vue';
+import PersonDetailPage from 'pages/PersonDetailPage.vue';
+import EntryEditPage from 'pages/EntryEditPage.vue';
+import ErrorNotFound from 'pages/ErrorNotFound.vue';
+
 const routes = [
   {
     path: '/',
     children: [
-      {name: 'events', path: '', component: () => import('pages/EventsPage.vue')},
-      {name: 'event', path: 'event/:id', component: () => import('pages/EventDetailPage.vue')},
-      {name: 'event-edit', path: 'event/:id/edit', component: () => import('pages/EventEditPage.vue')},
-      {name: 'persons', path: 'persons', component: () => import('pages/PersonsPage.vue')},
-      {name: 'person-detail', path: 'person/:id', component: () => import('pages/PersonDetailPage.vue')},
-      {name: 'entry', path: 'entry/:id', component: () => import('pages/EntryEditPage.vue')},
+      {name: 'events', path: '', component: EventsPage},
+      {name: 'event', path: 'event/:id', component: EventDetailPage},
+      {name: 'event-edit', path: 'event/:id/edit', component: EventEditPage},
+      {name: 'persons', path: 'persons', component: PersonsPage},
+      {name: 'person-detail', path: 'person/:id', component: PersonDetailPage},
+      {name: 'entry', path: 'entry/:id', component: EntryEditPage},
 
     ]
   },
@@ -16,7 +24,7 @@ const routes = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    component: ErrorNotFound
   }
 ]
 
