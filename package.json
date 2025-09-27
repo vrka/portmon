@@ -1,6 +1,6 @@
 {
   "name": "portmon",
-  "version": "0.10",
+  "version": "0.11",
   "description": "Bills sharing",
   "productName": "Portmon",
   "packageManager": "yarn@4.9.2",
@@ -11,7 +11,7 @@
     "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{js,cjs,mjs,vue}\"",
     "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build",
+    "build": "quasar build -m pwa",
     "postinstall": "quasar prepare",
     "test:unit": "vitest",
     "test:unit:ci": "vitest run"
