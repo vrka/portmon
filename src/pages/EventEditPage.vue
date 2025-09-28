@@ -26,6 +26,7 @@
     <CurrenciesTable :currencies="event.currencies"
                      :used="usedCurrencies"
                      @delete-currency="onDeleteCurrency"
+                     @add-currency="onAddCurrency"
     />
     <q-btn
       class="q-mt-md"
@@ -44,6 +45,7 @@
   import AppLayout from 'layouts/AppLayout.vue';
   import PersonTable from "components/PersonTable.vue";
   import CurrenciesTable from "components/CurrenciesTable.vue";
+  import {insertCurrency} from 'library/currencies.js';
 
   const route = useRoute()
   const router = useRouter()
@@ -93,5 +95,9 @@
     if (index !== -1) {
       event.value.currencies.splice(index, 1)
     }
+  }
+
+  function onAddCurrency(code){
+    insertCurrency(code, event.value);
   }
 </script>

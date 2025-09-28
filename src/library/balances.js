@@ -40,4 +40,22 @@ function ensureCurrency(balances, code, nullRow) {
     balances[code] = {...nullRow};
 }
 
+export function unit2params(unit) {
+  const safeUnit = Number(unit ?? 1);
+  return {
+    unit: safeUnit,
+    decimals: unit >= 1 ? 0 : Math.round(-Math.log10(unit))
+  };
+}
 
+export function formatValue(value, params) {
+  console.log("formatting", value, params);
+  const unit = params.unit;
+  const rounded = Math.round(value / unit) * unit;
+
+  let [intPart, decPart] = rounded.toFixed(params.decimals).split('.');
+  intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+  // Combine back; skip decimal if decimals is 0
+  return decPart ? `${intPart}.${decPart}` : intPart;
+}

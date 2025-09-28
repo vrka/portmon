@@ -1,18 +1,32 @@
 <template>
   <h6>Měny</h6>
   <q-list bordered separator>
-    <q-item v-for="c in currencies" :key="c.code" class="items-start" clickable @click="tryEnableConversion(c)">
+    <q-item v-for="c in currencies" :key="c.code" class="items-start">
       <q-item-section>
-        <q-item-label>{{ c.code }}
-          <q-btn
-            v-if="!used.includes(c.code)"
-            icon="delete"
-            color="negative"
-            flat
-            @click.stop="deleteCurrency(c)"
-          />
+        <q-item-label>
+          <div class="row items-center q-gutter-sm q-mt-xs">
+            <q-input
+              v-model.number="c.unit"
+              type="number"
+              dense
+              style="max-width: 3rem"
+            />
+            <span v-text="c.code"/>
+            <q-btn
+              v-if="!c.ratio"
+              rounded
+              flat
+              icon="currency_exchange" @click="tryEnableConversion(c)"/>
+            <q-btn
+              v-if="!used.includes(c.code)"
+              icon="delete"
+              color="negative"
+              flat
+              @click.stop="deleteCurrency(c)"
+            />
+          </div>
         </q-item-label>
-        <div v-if="c.ratio !== undefined" class="row items-center q-gutter-sm q-mt-xs">
+        <div v-if="c.ratio" class="row items-center q-gutter-sm q-mt-xs">
           <q-btn
             dense
             round
@@ -52,6 +66,17 @@
         </div>
       </q-item-section>
     </q-item>
+    <q-item>
+      <q-item-label class="row q-gutter-md">
+        <q-input
+          v-model="newCode"
+          dense
+          @keyup.enter="addCurrancy"
+          style="max-width: 3rem"
+        />
+        <q-btn color="positive" outline icon="add_circle_outline" @click="addCurrancy"/>
+      </q-item-label>
+    </q-item>
   </q-list>
 </template>
 
@@ -63,9 +88,10 @@
     used: {type: Array, default: () => []},
   })
 
-  const emit = defineEmits(['delete-currency']);
+  const emit = defineEmits(['delete-currency', 'add-currency']);
 
-  const currencyOptions = ref([])
+  const currencyOptions = ref([]);
+  const newCode = ref('');
 
   watch(
     () => props.currencies,
@@ -102,6 +128,11 @@
 
   function deleteCurrency(c) {
     emit('delete-currency', c.code)
+  }
+
+  async function addCurrancy() {
+    await emit('add-currency', newCode.value);
+    newCode.value = '';
   }
 
 </script>

@@ -50,7 +50,10 @@
 
   const computedColumns = computed(() => {
     if (props.showButtons) {
-      return [...baseColumns, {name: 'action', label: 'Akce', align: 'center', field: 'id', sortable: true}];
+      return [
+        {name: 'action', label: 'Akce', align: 'center', field: 'id', sortable: true},
+        ...baseColumns,
+      ];
     }
     return baseColumns;
   });

@@ -13,7 +13,7 @@
   import {db} from "src/db/index.js";
   import {usePersons} from "composables/usePersons.js";
   import {computed, ref} from "vue";
-  import {computeBalances} from "library/balances.js";
+  import {computeBalances, formatValue, unit2params} from "library/balances.js";
   import {Screen} from 'quasar'
 
 
@@ -28,7 +28,12 @@
   const entries = db.query(db.entries.where({event_id: props.id}));
   const event = db.record(db.events, props.id);
   const safeMembers = computed(() => (event.value?.members ?? []));
-  const balance = computed(() => computeBalances(entries.value, safeMembers.value, event.value?.currencies ?? []));
+  const safeCurrencies = computed(() => (event.value?.currencies ?? []));
+  const units = computed(() => safeCurrencies.value.reduce((acc, {code, unit = 1}) => {
+    acc[code] = unit2params(unit);
+    return acc;
+  }, {}));
+  const balance = computed(() => computeBalances(entries.value, safeMembers.value, safeCurrencies.value));
   const rowData = computed(() => horizontal.value ?
     Object.entries(balance.value).map(([code, item]) => ({code, ...item}))
     :
@@ -46,7 +51,7 @@
           label: getName(id),
           field: id,
           sortable: true,
-          format: (xx) => Number(xx).toFixed(0),
+          format: (value, row) => formatValue(value, units.value[row.code]),
         })),
       ] :
       [
@@ -60,7 +65,7 @@
           label: code,
           field: code,
           sortable: true,
-          format: (xx) => Number(xx).toFixed(0),
+          format: (value) => formatValue(value, units.value[code]),
         }))
       ]
   );

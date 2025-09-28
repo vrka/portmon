@@ -1,5 +1,5 @@
 import {describe, expect, test} from 'vitest'
-import {computeBalances} from './balances.js'
+import {computeBalances, formatValue, unit2params} from './balances.js'
 
 describe('balances', () => {
   test.each([
@@ -38,10 +38,24 @@ describe('balances', () => {
         {code: 'CZK'},
         {code: 'EUR', base: 'CZK', ratio: 25, reverse: false},
       ],
-      expected: {CZK: {A: 50, B: -50, C: 0, D:0}}
+      expected: {CZK: {A: 50, B: -50, C: 0, D: 0}}
     },
   ])('$name', ({members, entries, currencies, expected}) => {
     const result = computeBalances(entries, members, currencies)
     expect(result).toEqual(expected)
+  })
+
+})
+
+describe('formatUnits', () => {
+  test.each([
+    [12345.78, 1, '12 346'],
+    [12345.78, 10, '12 350'],
+    [12345.78, 0.1, '12 345.8'],
+    [12345.78, 0.001, '12 345.780'],
+    [123456.789456, 0.00001, '123 456.78946'],
+  ])('formating %f (%f)', (value, unit, expected) => {
+    const result = formatValue(value, unit2params(unit))
+    expect(result).toEqual(expected);
   })
 })

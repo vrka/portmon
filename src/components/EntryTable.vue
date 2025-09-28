@@ -12,6 +12,7 @@
   import {db} from "src/db/index.js";
   import {useRouter} from "vue-router";
   import {usePersons} from "composables/usePersons.js";
+  import { date } from 'quasar'
 
   const router = useRouter()
   const {getMembers} = usePersons()
@@ -23,7 +24,7 @@
   const columns = [
     {
       name: 'date', label: 'Datum', align: 'left', field: 'date', sortable: true,
-      format: val => val ? new Date(val).toLocaleDateString() : ''
+      format: val => date.formatDate(val, 'YYYY-MM-DD')
     },
     {name: 'description', label: 'Popis', align: 'left', field: 'description', sortable: true},
     {name: 'amount', label: 'Částka', align: 'right', field: 'amount', sortable: true},

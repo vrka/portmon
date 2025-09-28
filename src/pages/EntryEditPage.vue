@@ -21,7 +21,7 @@
                       emit-value
                       input-debounce="300"
                       new-value-mode="add"
-                      @new-value="normalizeCurrency"
+                      @new-value="tryAddCurrency"
             />
             <DatePicker class="col-12 col-md-4"
                         v-model="entry.date"/>
@@ -64,6 +64,7 @@
   import PersonPicker from 'components/PersonPicker.vue';
   import {whenReady} from "library/helpers.js";
   import DatePicker from "components/DatePicker.vue";
+  import {insertCurrency} from 'library/currencies.js';
 
   const route = useRoute();
   const router = useRouter();
@@ -82,31 +83,17 @@
   })) || []);
 
   async function saveEntry() {
-    //make sure currencies are actual
-    insertCurrency(entry.value.currency);
     await db.entries.put(toRaw(entry.value));
     router.back();
   }
 
-  function insertCurrency(code) {
-    if (!event.value.currencies) {
-      event.value.currencies = [];
-    }
-
-    // only add if it’s not already there
-    if (!event.value.currencies.some(c => c.code === code)) {
-      event.value.currencies.push({code: code});
+  function tryAddCurrency(val, done) {
+    const code = insertCurrency(val, event.value);
+    if (code) {
       currencyOptions.value.push({label: code, value: code})
       db.events.update(event.value.id, {currencies: toRaw(event.value.currencies)});
     }
-  }
-
-  function normalizeCurrency(val, done) {
-    if (!val) return
-
-    const code = val.trim().toUpperCase()
-    insertCurrency(code)
-    done(code)
+    done(code);
   }
 
 </script>
