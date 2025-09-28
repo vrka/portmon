@@ -5,3 +5,10 @@ h1, h2, h3, h4, h5, h6 {
   margin-block-start: 0;
   margin-block-end: 0.5em;
 }
+
+.q-page > div {
+  transform: scale(1.2);   /* 1.2 = 20% bigger */
+  transform-origin: top left; /* Adjust origin if needed */
+  width: 83.33%; /* 1 / 1.2 to avoid scrollbars */
+  height: 83.33%;
+}
