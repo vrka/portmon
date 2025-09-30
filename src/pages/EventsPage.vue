@@ -1,5 +1,9 @@
 <template>
   <AppLayout title="Akce">
+    <div class="row reverse-wrap">
+      <div class="col-12 col-sm-10">Akce</div>
+      <q-btn class="col-12 col-sm-2" color="positive" @click="addEvent">Přidej</q-btn>
+    </div>
     <q-list bordered separator style="max-width: 350px">
       <q-item v-for="event in events" :key="event.id" :to="{ name: 'event', params: { id: event.id } }">
         <q-item-section>
@@ -13,9 +17,6 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <AppToolbar>
-      <q-btn fab icon="add" color="positive" @click="addEvent"/>
-    </AppToolbar>
   </AppLayout>
 </template>
 
@@ -24,7 +25,6 @@
   import {useRouter} from 'vue-router'
   import AppLayout from 'layouts/AppLayout.vue';
   import {usePersons} from 'src/composables/usePersons'
-  import AppToolbar from "components/AppToolbar.vue";
 
   const router = useRouter()
   const events = db.query(db.events)

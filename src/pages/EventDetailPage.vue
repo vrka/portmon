@@ -12,7 +12,6 @@
 </template>
 
 <script setup>
-  import {onMounted, ref} from "vue";
   import {db} from "src/db";
   import {useRoute, useRouter} from "vue-router";
   import AppLayout from 'layouts/AppLayout.vue';
@@ -22,11 +21,7 @@
   const route = useRoute()
   const router = useRouter()
   const eventId = Number(route.params.id)
-  const event = ref(null)
-
-  onMounted(async () => {
-    event.value = await db.events.get(eventId)
-  })
+  const event = db.record(db.events, eventId);
 
   function edit() {
     router.push({name: 'event-edit', params: {id: eventId}})

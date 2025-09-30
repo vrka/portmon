@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Osoby">
     <PersonTable>
-      <q-btn  color="positive" @click="addPerson">Přidej</q-btn>
+      <q-btn color="positive" @click="addPerson">Přidej</q-btn>
     </PersonTable>
   </AppLayout>
 </template>

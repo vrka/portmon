@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title>{{ title }}</q-toolbar-title>
-        <div>Portmon {{ version }}</div>
+        <router-link :to="{name:'about'}"><img src="../assets/app-icon.png"/></router-link>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -54,8 +54,6 @@
     }
   });
 
-  const version = W_VERSION;
-
   const linksList = [
     {
       title: 'Akce',
@@ -68,6 +66,12 @@
       caption: 'seznam všech osob',
       icon: 'person',
       route: {name: 'persons'}
+    },
+    {
+      title: 'About',
+      caption: 'info & debug',
+      icon: 'help_outline',
+      route: {name: 'about'}
     },
   ]
 

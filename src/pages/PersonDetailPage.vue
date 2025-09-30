@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-  import {onMounted, ref, toRaw} from 'vue';
+  import {toRaw} from 'vue';
   import {useRoute, useRouter} from 'vue-router';
   import {db} from 'src/db';
   import AppLayout from 'layouts/AppLayout.vue';
@@ -41,18 +41,9 @@
   const route = useRoute();
   const router = useRouter();
 
-  const person = ref(null);
-
   const personId = Number(route.params.id);
+  const person = db.record(db.persons, personId);
 
-  // fetch person from Dexie
-  async function loadPerson() {
-    person.value = await db.persons.get(personId);
-  }
-
-  onMounted(loadPerson);
-
-  // save person changes
   async function savePerson() {
     if (!person.value) return;
     await db.persons.put(toRaw(person.value));

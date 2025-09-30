@@ -71,17 +71,17 @@
         <q-input
           v-model="newCode"
           dense
-          @keyup.enter="addCurrancy"
+          @keyup.enter="addCurrency"
           style="max-width: 3rem"
         />
-        <q-btn color="positive" outline icon="add_circle_outline" @click="addCurrancy"/>
+        <q-btn color="positive" outline icon="add_circle_outline" @click="addCurrency"/>
       </q-item-label>
     </q-item>
   </q-list>
 </template>
 
 <script setup>
-  import {ref, watch} from 'vue'
+  import {computed, ref} from 'vue'
 
   const props = defineProps({
     currencies: {type: Array, default: () => []},
@@ -90,19 +90,14 @@
 
   const emit = defineEmits(['delete-currency', 'add-currency']);
 
-  const currencyOptions = ref([]);
   const newCode = ref('');
 
-  watch(
-    () => props.currencies,
-    (val) => {
-      currencyOptions.value = val?.map(c => ({
-        label: c.code,
-        value: c.code
-      })) || []
-    },
-    {immediate: true}
-  )
+  const currencyOptions = computed(() => {
+    return props.currencies?.map(c => ({
+      label: c.code,
+      value: c.code
+    })) || []
+  });
 
   function tryEnableConversion(c) {
     if (c.ratio === undefined) {
@@ -130,8 +125,8 @@
     emit('delete-currency', c.code)
   }
 
-  async function addCurrancy() {
-    await emit('add-currency', newCode.value);
+  async function addCurrency() {
+    emit('add-currency', newCode.value);
     newCode.value = '';
   }
 

@@ -78,3 +78,13 @@ function record(source, id) {
 function field(record, field) {
   return waitReady(record).then(r => r[field])
 }
+
+export async function dumpDb() {
+  const tables = {}
+
+  for (const table of db.tables) {
+    tables[table.name] = await table.toArray()
+  }
+
+  return tables
+}
