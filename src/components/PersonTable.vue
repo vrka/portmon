@@ -41,10 +41,11 @@
 
   // columns
   const baseColumns = [
-    {name: 'forename', label: 'Příjmení', align: 'left', field: 'forename', sortable: true},
-    {name: 'surname', label: 'Jméno', align: 'left', field: 'surname', sortable: true},
+    {name: 'forename', label: 'Jméno', align: 'left', field: 'forename', sortable: true},
+    {name: 'surname', label: 'Příjmení', align: 'left', field: 'surname', sortable: true},
+    {name: 'surname', label: 'Přezdívka', align: 'left', field: 'nickname', sortable: true},
     {name: 'email', label: 'Email', align: 'left', field: 'email', sortable: true},
-    {name: 'phone', label: 'Tel', align: 'left', field: 'phone', sortable: true},
+    {name: 'phone', label: 'Telefon', align: 'left', field: 'phone', sortable: true},
     {name: 'account', label: 'Účet', align: 'left', field: 'account', sortable: true}
   ];
 

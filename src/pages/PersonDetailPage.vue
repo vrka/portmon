@@ -2,12 +2,17 @@
   <AppLayout :ready="!!person">
     <q-form @submit.prevent="savePerson" class="q-gutter-md">
       <q-input v-model="person.forename"
-               label="Forename"
+               label="Jméno"
                outlined
                dense
       />
       <q-input v-model="person.surname"
-               label="Surname"
+               label="Příjmení"
+               outlined
+               dense
+      />
+      <q-input v-model="person.nickname"
+               label="Přezdívka"
                outlined
                dense
       />

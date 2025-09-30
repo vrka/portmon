@@ -9,8 +9,7 @@ export function usePersons() {
 
   function getName(id) {
     const p = getPerson(id)
-    return p ? p.forename : '?'
-
+    return p?.nickname || p?.forename || '?';
   }
 
   function getMembers(memberIds) {
