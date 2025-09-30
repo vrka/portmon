@@ -23,6 +23,12 @@
 
   onMounted(loadDump);
 
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+
+  function parseDate(key, value) {
+    return key === 'date' && typeof value === 'string' && isoDateRegex.test(value) ? new Date(value) : value
+  }
+
   async function loadDump() {
     console.log("dumping");
     dump.value = JSON.stringify(await db.dumpDb(), null, 2);
@@ -30,7 +36,7 @@
   }
 
   async function onSave() {
-    const parsed = JSON.parse(dump.value);
+    const parsed = JSON.parse(dump.value, parseDate);
 
     if (typeof parsed !== 'object' || parsed === null) {
       throw new Error('Invalid dump format')
