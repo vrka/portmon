@@ -1,6 +1,6 @@
 {
   "name": "portmon",
-  "version": "0.14",
+  "version": "0.15",
   "description": "Bills sharing",
   "productName": "Portmon",
   "packageManager": "yarn@4.9.2",
