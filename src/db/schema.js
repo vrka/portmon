@@ -1,5 +1,5 @@
 export const schema = {
-  persons: '++id, forename, surname, email, phone, account',
-  events: '++id, name, description, opened, *members, currencies',
-  entries: '++id, event_id, date, description, amount, currency, *payers, *receivers'
+  events: '++id', //name, description, opened, *members, currencies',
+  persons: '++id', //forename, surname, email, phone, account',
+  entries: '++id, event_id' //date, description, amount, currency, *payers, *receivers'
 };
