@@ -4,14 +4,16 @@ import {ref, watch} from 'vue'
 import {schema} from "src/db/schema.js";
 import {waitReady} from "library/helpers.js";
 
-export const db = new Dexie('expenses_db');
+export let db;
 
-db.version(1).stores(schema);
+createDb();
 
-// attach helpers to db
-db.query = query
-db.record = record
-db.field = field
+function createDb() {
+  db = new Dexie('expenses_db');
+  db.version(1).stores(schema);
+  Object.assign(db, {query, record, field, deleteDatabase, dumpDb})
+}
+
 
 /**
  * Reactive live query for Dexie collections/tables
@@ -79,7 +81,7 @@ function field(record, field) {
   return waitReady(record).then(r => r[field])
 }
 
-export async function dumpDb() {
+async function dumpDb() {
   const tables = {}
 
   for (const table of db.tables) {
@@ -87,4 +89,9 @@ export async function dumpDb() {
   }
 
   return tables
+}
+
+async function deleteDatabase() {
+  await db.delete();
+  createDb();
 }
