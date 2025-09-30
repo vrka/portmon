@@ -2,9 +2,17 @@
   <AppLayout :ready="ready" :title="'Portmon ' + version">
     <q-btn v-if="!showDebug" color="negative" @click="showDebug=true">Debug</q-btn>
     <div v-else class="q-gutter-md">
-      <q-btn color="negative" outline icon="delete_forever" @click="confirm(onDelete,'Purge whole DB?')">Delete DB</q-btn>
+      <q-btn color="negative"
+             outline
+             icon="delete_forever"
+             @click="confirm(onDelete,'Purge whole DB?')">Delete DB
+      </q-btn>
       <q-input type="textarea" v-model="dump" autogrow outlined/>
-      <q-btn @click="confirm(onSave, 'Replace existing DB?')" color="negative" outline>Save</q-btn>
+      <q-btn @click="confirm(onSave, 'Replace existing DB?')"
+             icon="save"
+             color="negative"
+             outline>Save
+      </q-btn>
     </div>
   </AppLayout>
 </template>

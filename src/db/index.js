@@ -14,7 +14,6 @@ function createDb() {
   Object.assign(db, {query, record, field, deleteDatabase, dumpDb})
 }
 
-
 /**
  * Reactive live query for Dexie collections/tables
  * @param {Dexie.Table|Dexie.Collection|Function} source
